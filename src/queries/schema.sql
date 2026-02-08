@@ -1,6 +1,5 @@
 -- staging table to import the csv then insert into other tables
-CREATE TABLE IF NOT EXISTS "staging_table" (
-    "id" SERIAL, 
+CREATE TABLE IF NOT EXISTS "staging_table" ( 
     "job_post_id" TEXT UNIQUE NOT NULL, 
     "job_title" TEXT NOT NULL,
     "status" TEXT NOT NULL, 
@@ -24,7 +23,7 @@ CREATE TABLE IF NOT EXISTS "staging_table" (
     "annualized_max_salary" DOUBLE PRECISION NOT NULL, 
     "mean_annual_salary" DOUBLE PRECISION NOT NULL, 
     "sub_industry" TEXT NOT NULL, 
-    "industry" TEXT NOT NULL
+    "industry" TEXT NOT NULL 
 );
 
 
