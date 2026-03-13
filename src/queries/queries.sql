@@ -8,9 +8,11 @@ COPY staging_table
 FROM 'data/clean_job_data.csv'
 WITH (FORMAT csv, HEADER true, Encoding 'UTF8');
 
-INSERT INTO "jobs" ("job_post_id", "job_title", "cig_sagc", "employer", "location", "occupation", "sub_industry", "industry")
-SELECT "job_post_id", "job_title", "cig_sagc", "employer", "location", "occupation", "sub_industry", "industry"
-FROM "staging_table";
+-- Check count of cols and rows 
+SELECT COUNT(*) FROM staging_table; -- should be 14,036
+SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'staging_table'; -- should be 24
+
+
 
 
 DROP TABLE staging_table;

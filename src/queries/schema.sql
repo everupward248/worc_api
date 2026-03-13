@@ -78,3 +78,14 @@ CREATE TABLE IF NOT EXISTS "renumerations" (
     PRIMARY KEY("id"), 
     FOREIGN KEY("job_post_id") REFERENCES "jobs"("job_post_id")
 );
+
+-- tables for normalization
+CREATE TABLE IF NOT EXISTS employers (
+    id SERIAL PRIMARY KEY,
+    firm TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS industries (
+    id SERIAL PRIMARY KEY, 
+    industry TEXT NOT NULL
+);
