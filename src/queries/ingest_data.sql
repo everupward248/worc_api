@@ -195,8 +195,108 @@ $$;
 
 COMMIT;
 
+-- the years experience table is held as strings, values are currently repeated as case sensitive
+UPDATE staging_table
+SET years_experience = INITCAP(years_experience);
 
+BEGIN TRANSACTION;
+
+WITH years_stage AS (
+    SELECT DISTINCT(years_experience)
+    FROM staging_table
+)
+INSERT INTO years_experience (years) (
+    SELECT years_experience 
+    FROM years_stage
+);
+
+DO $$ 
+BEGIN 
+IF (SELECT COUNT(*) FROM years_experience) = 
+(SELECT COUNT(DISTINCT(years_experience)) FROM staging_table)
+THEN 
+    RETURN;
+ELSE
+    RAISE EXCEPTION 'Data unsuccessully ingested into the years_experience table';
+END IF;
+END 
+$$;
+
+COMMIT;
+
+
+-- ingest data into the jobs table
+BEGIN TRANSACTION;
 
 INSERT INTO jobs 
-("job_post_id", "job_title", "cig_sagc", "employer", "location", "occupation", "sub_industry", "industry")
-FROM staging_table;
+("job_post_id", 
+    "job_title", 
+    "cig_sagc", 
+    "employer_id",
+    "location_id", 
+    "occupation_id", 
+    "sub_industry_id", 
+    "industry_id", 
+    "status", 
+    "created_date", 
+    "start_date", 
+    "end_date",
+    "education_id",
+    "work_type_id", 
+    "years_experience_id",
+    "hours_per_week", 
+    "currency", 
+    "salary_frequency", 
+    "salary_description", 
+    "min_salary", 
+    "max_salary", 
+    "annualized_min_salary", 
+    "annualized_max_salary", 
+    "mean_annual_salary" 
+)
+(
+    SELECT 
+        s."job_post_id", 
+        s."job_title", 
+        s."cig_sagc", 
+        e."id",
+        l."id", 
+        o."id", 
+        si."id", 
+        i."id", 
+        s."status", 
+        s."created_date", 
+        s."start_date", 
+        s."end_date",
+        ed."id",
+        wt."id", 
+        ye."id",
+        "hours_per_week", 
+        "currency", 
+        "salary_frequency", 
+        "salary_description", 
+        "min_salary", 
+        "max_salary", 
+        "annualized_min_salary", 
+        "annualized_max_salary", 
+        "mean_annual_salary" 
+        FROM staging_table AS s 
+        INNER JOIN employers AS e 
+            ON e.firm = s.employer
+        INNER JOIN locations AS l 
+            ON l.location = s.location
+        INNER JOIN occupations AS o 
+            ON o.occupation = s.occupation
+        INNER JOIN subindustries AS si 
+            ON si.subindustry = s.sub_industry 
+        INNER JOIN industries AS i 
+            ON i.industry = s.industry 
+        INNER JOIN education AS ed 
+            ON ed.education_level = s.required_education_level 
+        INNER JOIN work_type AS wt 
+            ON wt.type = s.work_type 
+        INNER JOIN years_experience AS ye 
+            ON ye.years = s.years_experience
+);
+
+
