@@ -38,29 +38,15 @@ CREATE TABLE IF NOT EXISTS "jobs" (
     "occupation" TEXT NOT NULL, 
     "sub_industry" TEXT NOT NULL, 
     "industry" TEXT NOT NULL, 
-    PRIMARY KEY("id")
-);
-
-CREATE TABLE IF NOT EXISTS "statuses" (
-    "id" SERIAL, 
-    "job_post_id" TEXT UNIQUE NOT NULL, 
     "status" TEXT NOT NULL, 
     "created_date" DATE NOT NULL, 
     "start_date" DATE NOT NULL, 
-    "end_date" DATE NOT NULL, 
-    PRIMARY KEY("id"), 
-    FOREIGN KEY("job_post_id") REFERENCES "jobs"("job_post_id")
+    "end_date" DATE NOT NULL,
+    "education_level" VARCHAR (100) NOT NULL,
+    "years_experience" VARCHAR (100) NOT NULL,
+    PRIMARY KEY("id")
 );
 
-
-CREATE TABLE IF NOT EXISTS "experiences" (
-    "id" SERIAL, 
-    "job_post_id" TEXT UNIQUE NOT NULL, 
-    "required_education_level" TEXT NOT NULL, 
-    "years_experience" TEXT NOT NULL, 
-    PRIMARY KEY("id"), 
-    FOREIGN KEY("job_post_id") REFERENCES "jobs"("job_post_id")
-);
 
 CREATE TABLE IF NOT EXISTS "renumerations" (
     "id" SERIAL, 
@@ -81,11 +67,36 @@ CREATE TABLE IF NOT EXISTS "renumerations" (
 
 -- tables for normalization
 CREATE TABLE IF NOT EXISTS employers (
-    id SERIAL PRIMARY KEY,
-    firm TEXT NOT NULL
+    "id" SERIAL PRIMARY KEY,
+    "firm" TEXT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS industries (
-    id SERIAL PRIMARY KEY, 
-    industry TEXT NOT NULL
+    "id" SERIAL PRIMARY KEY, 
+    "industry" TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS subindustries (
+    "id" SERIAL PRIMARY KEY,
+    "subindustry" TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS locations (
+    "id" SERIAL PRIMARY KEY,
+    "location" VARCHAR (120) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS education (
+    "id" SERIAL PRIMARY KEY,
+    "education_level" VARCHAR (100) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS occupations (
+    "id" SERIAL PRIMARY KEY,
+    "occupation" VARCHAR (150) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS work_type (
+    "id" SERIAL PRIMARY KEY,
+    "type" VARCHAR(30) NOT NULL
 );
