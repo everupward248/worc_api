@@ -8,6 +8,7 @@
    5. create education table
    6. create occupation table
    7. create work type table
+   8. create years experience table
 
 */
 
@@ -265,21 +266,21 @@ INSERT INTO jobs
         si."id", 
         i."id", 
         s."status", 
-        s."created_date", 
-        s."start_date", 
-        s."end_date",
+        TO_DATE(s."created_date", 'DD-Mon-YY'), 
+        TO_DATE(s."start_date", 'DD-Mon-YY'), 
+        TO_DATE(s."end_date", 'DD-Mon-YY'),
         ed."id",
         wt."id", 
         ye."id",
-        "hours_per_week", 
-        "currency", 
-        "salary_frequency", 
-        "salary_description", 
-        "min_salary", 
-        "max_salary", 
-        "annualized_min_salary", 
-        "annualized_max_salary", 
-        "mean_annual_salary" 
+        s."hours_per_week", 
+        s."currency", 
+        s."salary_frequency", 
+        s."salary_description", 
+        s."min_salary", 
+        s."max_salary", 
+        s."annualized_min_salary", 
+        s."annualized_max_salary", 
+        s."mean_annual_salary" 
         FROM staging_table AS s 
         INNER JOIN employers AS e 
             ON e.firm = s.employer
@@ -299,4 +300,64 @@ INSERT INTO jobs
             ON ye.years = s.years_experience
 );
 
+DO $$
+BEGIN 
+IF (SELECT COUNT(*) FROM jobs) = 
+(SELECT COUNT(*) FROM staging_table)
+THEN 
+    RETURN;
+ELSE 
+    RAISE EXCEPTION 'Data unsuccessfully ingested into the jobs table';
+END IF;
+END 
+$$;
+
+COMMIT;
+
+
+-- not all rows being ingested, diagnose issue 
+SELECT s.job_post_id, 
+    CASE WHEN s.employer IS NULL THEN 'Missing employer' END AS employer_issue,
+    CASE WHEN l.id IS NULL THEN 'Missing locations' END AS location_issue, 
+    CASE WHEN o.id IS NULL THEN 'Missing occupation' END AS occupation_issue,
+    CASE WHEN si.id IS NULL THEN 'Missing subindustry' END AS subindustry_issue,
+    CASE WHEN i.id IS NULL THEN 'Misssing industry' END AS industry_issue,
+    CASE WHEN ed.id IS NULL THEN 'Missing education' END AS education_issue, 
+    CASE WHEN wt.id IS NULL THEN 'Missing work type' END AS work_type_issue,
+    CASE WHEN ye.id IS NULL THEN 'Missing years experience' END AS experience_issue
+FROM staging_table AS s
+LEFT JOIN employers AS e 
+    ON e.firm = s.employer
+LEFT JOIN locations AS l 
+    ON l.location = s.location
+LEFT JOIN occupations AS o 
+    ON o.occupation = s.occupation 
+LEFT JOIN subindustries AS si 
+    ON si.subindustry = s.sub_industry 
+LEFT JOIN industries AS i 
+    ON i.industry = s.industry 
+LEFT JOIN education AS ed 
+    ON ed.education_level = s.required_education_level 
+LEFT JOIN work_type AS wt 
+    ON wt.type = s.work_type 
+LEFT JOIN years_experience AS ye 
+    ON ye.years = s.years_experience
+WHERE 
+    e.id IS NULL 
+    OR l.id IS NULL
+    OR o.id IS NULL
+    OR si.id IS NULL 
+    OR i.id IS NULL
+    OR ed.id IS NULL
+    OR wt.id IS NULL
+    OR ye.id IS NULL; 
+
+-- due to the update to the education level, update staging table to match 
+UPDATE staging_table 
+SET required_education_level = (SELECT education_level FROM education WHERE id = 3)
+WHERE required_education_level LIKE 'Bach%';
+
+UPDATE staging_table 
+SET required_education_level = (SELECT education_level FROM education WHERE id = 4)
+WHERE required_education_level LIKE 'Mast%';
 
