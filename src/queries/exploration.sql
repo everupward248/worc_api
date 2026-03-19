@@ -99,5 +99,76 @@ FROM average_hours_tops_jobs AS tj
 INNER JOIN industry_average_hours AS ia 
     ON tj.industry = ia.industry;
 
--- TODO: add filter for only the top 5-10 industries by average pay
+/* 
+    the top 5 jobs in the financial services have a lower weekly work rate of 2 hours compared to the indsutry average
+    the biggest discrepancy between hours worked by industry is in education, the top 5 jobs in the industry work an average of 4 more hours than the industry average
+*/
 
+/* 
+    education is ranked 7/20 by industry in regards to annual salary
+    the top 7 empoyers in the industry all pay > 60k annually
+    the top employer pays 80k annually on average 
+
+*/
+SELECT ROUND(AVG(j.mean_annual_salary)::NUMERIC, 2) AS average_salary, e.firm, i.industry, 
+    RANK() OVER(ORDER BY ROUND(AVG(j.mean_annual_salary)::NUMERIC, 2) DESC) AS school_rank
+FROM jobs AS j 
+INNER JOIN industries AS i 
+    ON j.industry_id = i.id
+INNER JOIN employers AS e 
+    ON j.employer_id = e.id
+WHERE i.industry = 'Education'
+GROUP BY e.firm, i.industry
+ORDER BY average_salary DESC; 
+
+/* 
+    to investigate the public sector 
+    top 3 employers in public: utility regulation and competition office, cayman islands stock exchange, cayman islands monetary authority (all > 100k annually on average)
+    on average, the public finance sector compensates more than private, public - 97k vs private - 92k
+*/
+
+SELECT * FROM industries; -- id 14
+
+SELECT j.job_title, j.mean_annual_salary, j.cig_sagc, i.industry, e.firm
+FROM jobs AS j 
+INNER JOIN industries AS i 
+    ON j.industry_id = i.id
+INNER JOIN employers AS e 
+    ON j.employer_id = e.id
+WHERE j.cig_sagc IS TRUE
+ORDER BY e.firm, j.mean_annual_salary DESC;
+
+SELECT ROUND(AVG(j.mean_annual_salary)) AS average_salary, i.industry, e.firm, -- top 3 employers in public: utility regulation and competition office, cayman islands stock exchange, cayman islands monetary authority (all > 100k annually on average)
+    RANK() OVER(ORDER BY ROUND(AVG(j.mean_annual_salary)) DESC) AS salary_rank
+FROM jobs AS j 
+INNER JOIN industries AS i 
+    ON j.industry_id = i.id 
+INNER JOIN employers AS e 
+    ON j.employer_id = e.id
+WHERE j.cig_sagc IS TRUE
+GROUP BY e.firm, i.industry
+ORDER BY salary_rank;
+
+-- compare public and private finance industry
+WITH public_finance AS (
+    SELECT ROUND(AVG(j.mean_annual_salary)) AS public_average_salary
+    FROM jobs AS j 
+    INNER JOIN industries AS i 
+        ON j.industry_id = i.id
+    WHERE cig_sagc IS TRUE 
+        AND i.id = (SELECT id FROM industries WHERE industry = 'Financial and Insurance Activities')
+), 
+private_finance AS (
+    SELECT ROUND(AVG(j.mean_annual_salary)) AS private_average_salary
+    FROM jobs AS j 
+    INNER JOIN industries AS i 
+        ON j.industry_id = i.id
+    WHERE cig_sagc IS FALSE 
+        AND i.id = (SELECT id FROM industries WHERE industry = 'Financial and Insurance Activities')
+)
+
+SELECT 
+    p.public_average_salary, 
+    pr.private_average_salary
+FROM public_finance AS p 
+CROSS JOIN private_finance AS pr; -- public pays an average of 5k more than the private sector in finance
