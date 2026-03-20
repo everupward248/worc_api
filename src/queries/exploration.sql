@@ -1,4 +1,9 @@
--- exploratory queries
+/* 
+    exploratory queries
+
+    The highest paying industries are {1 : [Financial and Insurance Activities, 93k], 2 : [Professional, Scientific and Technical Activities, 80k], 3 : [Public Administration and Defence; Compulsory Social Security, 80k]}
+*/
+
 -- average pay rankings by industry
 SELECT i.industry, ROUND(AVG(mean_annual_salary)::NUMERIC, 2) AS average_salary, 
 RANK () OVER(ORDER BY ROUND(AVG(mean_annual_salary)::NUMERIC, 2) DESC) AS industry_rank
@@ -7,6 +12,50 @@ INNER JOIN industries AS i
     ON jobs.industry_id = i.id
 GROUP BY i.industry
 ORDER BY average_salary DESC; -- highest average pay by industry is Financial and Insurance activities with an average of $92,707.86
+
+-- highest paying subindustries for the highest paying industries
+-- rank the highest paying industires
+WITH highest_paying_industries AS (
+    SELECT j.industry_id, ROUND(AVG(j.mean_annual_salary)::NUMERIC, 2) AS average_salary, 
+        RANK () OVER(ORDER BY ROUND(AVG(mean_annual_salary)::NUMERIC, 2) DESC) AS industry_rank
+    FROM jobs AS j 
+    GROUP BY j.industry_id 
+    ORDER BY average_salary DESC
+), 
+-- filter out the tope five industries
+top_five AS (
+    SELECT industry_id, average_salary, industry_rank FROM highest_paying_industries WHERE industry_rank <= 5
+), 
+
+-- filter out all jobs for indsutry and subindustry
+industries_subindustries AS (
+    SELECT 
+        i.industry, 
+        tf.industry_rank,
+        si.subindustry, 
+        tf.average_salary AS industry_average, 
+        j.job_title,
+        j.mean_annual_salary
+    FROM jobs AS j 
+    INNER JOIN top_five AS tf 
+        ON j.industry_id = tf.industry_id
+    INNER JOIN industries AS i 
+        ON tf.industry_id = i.id
+    INNER JOIN subindustries AS si 
+        ON j.sub_industry_id = si.id 
+    WHERE j.industry_id IN (
+        SELECT industry_id FROM top_five
+))
+
+-- TODO: finish the subindustry salary ranking to determine the highest paying subindustries
+SELECT industry, industry_rank, subindustry,
+    ROUND(AVG(mean_annual_salary)::NUMERIC, 2) AS subindustry_average,
+    RANK() OVER(PARTITION BY industry ORDER BY ROUND(AVG(mean_annual_salary)::NUMERIC, 2) DESC) AS subindustry_rank, 
+    mean_annual_salary, 
+    job_title
+FROM industries_subindustries
+GROUP BY subindustry, industry
+ORDER BY industry_rank, mean_annual_salary DESC;
 
 
 -- 10 highest paying jobs per the dataset
