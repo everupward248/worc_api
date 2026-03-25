@@ -5,3 +5,4 @@ src/logs/
 data/
 shared_log.log
 
+src/db/.env
