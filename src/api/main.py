@@ -6,6 +6,7 @@ from src.helper_modules.logger_setup import get_logger
 from src.db import db
 
 
+
 # initialize the logger
 api_logger = get_logger(__name__)
 
@@ -23,7 +24,7 @@ app = FastAPI(lifespan=lifespan)
 async def test_path():
      return {"hello": "world"}
 
-# testing the async calls to bd 
+# testing the async calls to db
 @app.get("/test")
 async def async_test():
      try:
@@ -38,10 +39,28 @@ async def async_test():
                api_logger.info(data)
           return data
      except DatabaseError as e:
-          ## TODO: import logger correctly to bring in error from database error without exposing db details to the client
           if api_logger:
-               api_logger.info(f"Database error: {e}")
+               api_logger.warning(f"Database error: {e}")
           raise HTTPException(status_code=500, detail="Database error")
+     
+# industry data resource
+@app.get("/industries/{id}")
+async def industry_path(id: int | None = None):
+     try:
+          async with db.pool.connection() as conn:
+               async with conn.cursor(row_factory=dict_row) as cur:
+                    await cur.execute("""
+                                        SELECT * FROM industries
+                                      """)
+                    data = await cur.fetchall()
+          if api_logger:
+               api_logger.info(data)
+     except DatabaseError as e:
+          if api_logger:
+               api_logger.warning(f"Database error: {e}")
+          raise HTTPException(status_code=500, detail="Database error")
+
+
 
 
 # TODO: create enpoints for:
