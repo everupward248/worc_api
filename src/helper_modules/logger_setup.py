@@ -1,4 +1,11 @@
+from pathlib import Path
 import logging
+
+ # resolve issue with the file path as fastapi is throwing an error 
+# this makes the file path absolute to the project dir
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
+log_dir = BASE_DIR / "logs"
+log_dir.mkdir(exist_ok=True)
 
 def get_logger(name: str=__name__) -> logging.Logger | None:
     """
@@ -12,7 +19,9 @@ def get_logger(name: str=__name__) -> logging.Logger | None:
 
     # prevent duplicate handlers
     if not logger.handlers:
-        handler = logging.FileHandler(f"logs/{name}.log", mode="w")
+        log_file = log_dir / f"{name}.log"
+
+        handler = logging.FileHandler(log_file, mode="w")
         formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s - %(lineno)d")
         handler.setFormatter(formatter)
         logger.addHandler(handler)
@@ -27,7 +36,8 @@ shared_logger.setLevel(logging.DEBUG)
 
 # prevent duplicate handlers
 if not shared_logger.handlers:
-    handler = logging.FileHandler("shared_log.log", mode="w")
+    shared_log_file = log_dir / "shared_log.log"
+    handler = logging.FileHandler(shared_log_file, mode="w")
     formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s - %(lineno)d")
     handler.setFormatter(formatter)
     shared_logger.addHandler(handler)

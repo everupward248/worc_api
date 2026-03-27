@@ -2,12 +2,12 @@ from fastapi import FastAPI, HTTPException
 from contextlib import asynccontextmanager
 from psycopg import DatabaseError
 from psycopg.rows import dict_row
-# from src.helper_modules import logger
+from src.helper_modules.logger_setup import get_logger
 from src.db import db
 
 
 # initialize the logger
-#api_logger = logger.get_logger(__name__)
+api_logger = get_logger(__name__)
 
 # lifespan is a context function which performs startup and shutdown tasks
 @asynccontextmanager 
@@ -34,10 +34,13 @@ async def async_test():
                                         SELECT * FROM jobs LIMIT 5
                                    """)
                     data = await cur.fetchall()
+          if api_logger:
+               api_logger.info(data)
           return data
      except DatabaseError as e:
           ## TODO: import logger correctly to bring in error from database error without exposing db details to the client
-          # api_logger.warning(f"Database error: {e}")
+          if api_logger:
+               api_logger.info(f"Database error: {e}")
           raise HTTPException(status_code=500, detail="Database error")
 
 
@@ -51,4 +54,4 @@ async def async_test():
 
 
 if __name__ == "__main__":
-     print("testing")
+     print(api_logger)
