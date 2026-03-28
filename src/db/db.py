@@ -1,22 +1,27 @@
 from psycopg_pool import AsyncConnectionPool
-from dotenv import load_dotenv
+from urllib.parse import quote
 import os
 
-# load environment variables from .env file
-load_dotenv()
+# factory function for creating the connection pool
+def create_pool() -> AsyncConnectionPool:
+    # access environment variables
+    HOST = os.getenv("HOST")
+    DBNAME = os.getenv("DBNAME")
+    USER = os.getenv("USER")
+    PASSWORD = os.getenv("PASSWORD")
 
-# access environment variables
-HOST = os.getenv("HOST")
-DBNAME = os.getenv("DBNAME")
-USER = os.getenv("USER")
-PASSWORD = os.getenv("PASSWORD")
+    if not all([HOST, DBNAME, USER, PASSWORD]):
+        raise ValueError("Missing required database environment variables")
+    else:
+        # there is a special character contained in the password
+        PASSWORD_ENCODED =  quote(str(PASSWORD), safe="")
 
-# create connection info string to pass as argument to connection pool construction
-conninfo_string = f"host={HOST} dbname={DBNAME} user={USER} password={PASSWORD}"
+    # create connection info DSN(data source name) to pass as argument to connection pool construction
+    conninfo_url = f"postgresql://{USER}:{PASSWORD_ENCODED}@{HOST}/{DBNAME}"
 
-pool = AsyncConnectionPool(
-    conninfo=conninfo_string,
-    open=False, 
-    min_size=5, 
-    max_size=20
-)
+    return AsyncConnectionPool(
+        conninfo=conninfo_url,
+        open=False, 
+        min_size=5, 
+        max_size=20
+    )

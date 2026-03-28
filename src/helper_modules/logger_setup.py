@@ -1,17 +1,15 @@
 from pathlib import Path
 import logging
 
- # resolve issue with the file path as fastapi is throwing an error 
+# resolve issue with the file path as fastapi is throwing an error 
 # this makes the file path absolute to the project dir
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 log_dir = BASE_DIR / "logs"
 log_dir.mkdir(exist_ok=True)
 
-def get_logger(name: str=__name__) -> logging.Logger | None:
+def get_logger(name: str=__name__) -> logging.Logger:
     """
     used to create custom logs for each module 
-
-
     """
 
     logger = logging.getLogger(name)
@@ -27,7 +25,7 @@ def get_logger(name: str=__name__) -> logging.Logger | None:
         logger.addHandler(handler)
         logger.propagate = False
 
-        return logger
+    return logger
     
     # configure a shared log which logs the program as a whole
 # https://medium.com/@shrimantshubham/basic-example-of-log-into-a-single-log-file-from-several-python-modules-090e57ce8f50
