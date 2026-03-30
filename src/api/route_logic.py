@@ -17,11 +17,14 @@ async def get_connection(pool: AsyncConnectionPool):
     try:
         async with pool.connection() as conn:
             db_logger.info("connection acquired")
-            yield conn
-            db_logger.info("connection released")
+            # this ensures that the log occurs 100% of the time even if the connection fails
+            try:
+                yield conn
+            finally:
+                db_logger.info("connection released")
     except DatabaseError as e:
         db_logger.warning(e)
-        raise e
+        raise 
 
 # test function to verify that api is connecting and returning from the database properly
 async def test_logic(pool: AsyncConnectionPool):
@@ -37,6 +40,35 @@ async def test_logic(pool: AsyncConnectionPool):
                 """
 
                 await cur.execute(query)
+
+                data = await cur.fetchall()
+                db_logger.info(data)
+            return data
+        except DatabaseError as query_error:
+            db_logger.warning({
+                "error": str(query_error),
+                "context": "query execution",
+                "query": query
+            })
+
+# function to return the industries from the db
+async def industry(pool: AsyncConnectionPool, industry_id: int | None = None):
+    """
+    returns the industries from the db
+    """
+    async with get_connection(pool) as conn:
+        try:
+            async with conn.cursor(row_factory=dict_row) as cur:
+                if industry_id is not None:
+                    query = """
+                    SELECT * FROM industries WHERE id = (%s)
+                    """
+                    await cur.execute(query, (industry_id,))
+                else:    
+                    query = """
+                    SELECT * FROM industries
+                    """
+                    await cur.execute(query)
 
                 data = await cur.fetchall()
                 db_logger.info(data)
