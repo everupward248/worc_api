@@ -23,7 +23,7 @@ async def get_connection(pool: AsyncConnectionPool):
             finally:
                 db_logger.info("connection released")
     except DatabaseError as e:
-        db_logger.warning(e)
+        db_logger.error(e)
         raise 
 
 # test function to verify that api is connecting and returning from the database properly
@@ -45,7 +45,7 @@ async def test_logic(pool: AsyncConnectionPool):
                 db_logger.info(data)
             return data
         except DatabaseError as query_error:
-            db_logger.warning({
+            db_logger.error({
                 "error": str(query_error),
                 "context": "query execution",
                 "query": query
@@ -69,12 +69,39 @@ async def industry(pool: AsyncConnectionPool, industry_id: int | None = None):
                     SELECT * FROM industries
                     """
                     await cur.execute(query)
-
                 data = await cur.fetchall()
                 db_logger.info(data)
             return data
         except DatabaseError as query_error:
-            db_logger.warning({
+            db_logger.error({
+                "error": str(query_error),
+                "context": "query execution",
+                "query": query
+            })
+
+# function to return the subindustries from the db
+async def subindustry(pool: AsyncConnectionPool, subindustry_id: int | None = None):
+    """
+    returns the subindustries from the db
+    """
+    async with get_connection(pool) as conn:  
+        try:
+            async with conn.cursor(row_factory=dict_row) as cur:
+                if subindustry_id is not None:
+                    query = """
+                    SELECT * FROM subindustries WHERE id = (%s)
+                    """
+                    await cur.execute(query, (subindustry_id,))
+                else:
+                    query = """
+                    SELECT * FROM subindustries
+                    """
+                    await cur.execute(query)
+                data = await cur.fetchall()
+                db_logger.info(data)
+            return data
+        except DatabaseError as query_error:
+            db_logger.error({
                 "error": str(query_error),
                 "context": "query execution",
                 "query": query

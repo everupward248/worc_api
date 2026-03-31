@@ -3,6 +3,7 @@ from urllib.parse import quote
 import os
 
 # factory function for creating the connection pool
+# environment variables are declared in the function so that they only exist at runtime during the lifespan of the api
 def create_pool() -> AsyncConnectionPool:
     # access environment variables
     HOST = os.getenv("HOST")

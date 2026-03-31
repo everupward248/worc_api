@@ -54,15 +54,25 @@ async def industries(industry_id: int | None = None, pool = Depends(get_pool)):
           return await rl.industry(pool)
      except HTTPException as e:
           api_logger.error(e)
-          raise HTTPException(status_code=500, detail=e)
+          raise HTTPException(status_code=500, detail="Internal server error")
+     
+# subindustry data resource
+@app.get("/subindustries")
+async def subindustries(subindustry_id: int | None = None, pool = Depends(get_pool)):
+     try:
+          if subindustry_id is not None:
+               return await rl.subindustry(pool, subindustry_id)
+          return await rl.subindustry(pool)
+     except HTTPException as e:
+          api_logger.error(e)
+          raise HTTPException(status_code=500, detail="Internal server error")
 
 
 
 # TODO: create enpoints for:
 ## jobs - all data 
 ## employers
-## industry
-## subindustries
+## occupations
 ## locations
 ## post/ delete new entries
 
