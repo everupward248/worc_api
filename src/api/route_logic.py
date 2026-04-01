@@ -50,6 +50,7 @@ async def test_logic(pool: AsyncConnectionPool):
                 "context": "query execution",
                 "query": query
             })
+            raise
 
 # function to return the industries from the db
 async def industry(pool: AsyncConnectionPool, industry_id: int | None = None):
@@ -78,6 +79,7 @@ async def industry(pool: AsyncConnectionPool, industry_id: int | None = None):
                 "context": "query execution",
                 "query": query
             })
+            raise
 
 # function to return the subindustries from the db
 async def subindustry(pool: AsyncConnectionPool, subindustry_id: int | None = None):
@@ -106,3 +108,33 @@ async def subindustry(pool: AsyncConnectionPool, subindustry_id: int | None = No
                 "context": "query execution",
                 "query": query
             })
+            raise
+
+# function to return the occupation data from the db
+async def occupations(pool: AsyncConnectionPool, occupation_id: int | None = None):
+    """
+    returns the occupations from the db
+    """
+    async with get_connection(pool) as conn:
+        try:
+            async with conn.cursor(row_factory=dict_row) as cur:
+                if occupation_id is not None:
+                    query = """
+                    SELECT * FROM occupations WHERE id = (%s)
+                    """
+                    await cur.execute(query, (occupation_id,))
+                else:
+                    query = """
+                    SELECT * FROM occupations
+                    """
+                    await cur.execute(query)
+                data = await cur.fetchall()
+                db_logger.info(data)
+            return data
+        except DatabaseError as query_error:
+            db_logger.error({
+                "error": str(query_error),
+                "context": "query_execution",
+                "query": query
+            })
+            raise

@@ -5,6 +5,8 @@ from src.db import db
 from dotenv import load_dotenv
 import src.api.route_logic as rl
 from psycopg_pool import AsyncConnectionPool
+from typing import Annotated
+from psycopg import DatabaseError
 
 # load environment variables from .env file, this loads globally so accessible across all modules, hence no error in the db factory function
 # configuration should be initialized at entry point, not inside libraries/modules
@@ -31,48 +33,79 @@ app = FastAPI(lifespan=lifespan)
 def get_pool(request: Request) -> AsyncConnectionPool:
      return request.app.state.pool
 
+# using Annotated, create a variable for the dependency to pass the pool connections to the routes
+ConnPool = Annotated[AsyncConnectionPool, Depends(get_pool)]
+
 @app.get("/")
 async def test_path():
      return {"hello": "world"}
 
 # testing the async calls to db
 @app.get("/test")
-async def async_test(pool = Depends(get_pool)):
+async def async_test(conn_pool: ConnPool):
      try:
-          return await rl.test_logic(pool)
+          return await rl.test_logic(conn_pool)
      except HTTPException as e:
           api_logger.error(e)
           raise HTTPException(status_code=500, detail="Internal server error")
      
-# industry data resource
+# industry route
 @app.get("/industries")
 # fast api recognizes function parameters as query parameters
-async def industries(industry_id: int | None = None, pool = Depends(get_pool)):
+async def industries(conn_pool: ConnPool, industry_id: int | None = None):
      try:
           if industry_id is not None:
-               return await rl.industry(pool, industry_id)
-          return await rl.industry(pool)
+               return await rl.industry(conn_pool, industry_id)
+          return await rl.industry(conn_pool)
      except HTTPException as e:
+          api_logger.info(e)
+          raise
+     except DatabaseError as e:
           api_logger.error(e)
-          raise HTTPException(status_code=500, detail="Internal server error")
-     
-# subindustry data resource
-@app.get("/subindustries")
-async def subindustries(subindustry_id: int | None = None, pool = Depends(get_pool)):
-     try:
-          if subindustry_id is not None:
-               return await rl.subindustry(pool, subindustry_id)
-          return await rl.subindustry(pool)
-     except HTTPException as e:
-          api_logger.error(e)
+          raise HTTPException(status_code=500, detail="Database error")
+     except Exception as e:
+          api_logger.exception("Unexpected error")
           raise HTTPException(status_code=500, detail="Internal server error")
 
+     
+# subindustry route
+@app.get("/subindustries")
+async def subindustries(conn_pool: ConnPool, subindustry_id: int | None = None):
+     try:
+          if subindustry_id is not None:
+               return await rl.subindustry(conn_pool, subindustry_id)
+          return await rl.subindustry(conn_pool)
+     except HTTPException as e:
+          api_logger.info(e)
+          raise
+     except DatabaseError as e:
+          api_logger.error(e)
+          raise HTTPException(status_code=500, detail="Database error")
+     except Exception as e:
+          api_logger.exception("Unexpected error")
+          raise HTTPException(status_code=500, detail="Internal server error")
+
+# occupations route
+@app.get("/occupations")
+async def occupations(conn_pool: ConnPool, occupation_id: int | None = None):
+     try:
+          if occupation_id is not None:
+               return await rl.occupations(conn_pool, occupation_id)
+          return await rl.occupations(conn_pool)
+     except HTTPException as e:
+          api_logger.info(e)
+          raise
+     except DatabaseError as e:
+          api_logger.error(e)
+          raise HTTPException(status_code=500, detail="Database error")
+     except Exception as e:
+          api_logger.exception("Unexpected error")
+          raise HTTPException(status_code=500, detail="Internal server error")
 
 
 # TODO: create enpoints for:
 ## jobs - all data 
 ## employers
-## occupations
 ## locations
 ## post/ delete new entries
 
