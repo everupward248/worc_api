@@ -42,7 +42,7 @@ async def test_logic(pool: AsyncConnectionPool):
                 await cur.execute(query)
 
                 data = await cur.fetchall()
-                db_logger.info(data)
+                db_logger.info("Test data successfully fetched from database")
             return data
         except DatabaseError as query_error:
             db_logger.error({
@@ -71,7 +71,7 @@ async def industry(pool: AsyncConnectionPool, industry_id: int | None = None):
                     """
                     await cur.execute(query)
                 data = await cur.fetchall()
-                db_logger.info(data)
+                db_logger.info("Industry data successfully fetched from database")
             return data
         except DatabaseError as query_error:
             db_logger.error({
@@ -100,7 +100,7 @@ async def subindustry(pool: AsyncConnectionPool, subindustry_id: int | None = No
                     """
                     await cur.execute(query)
                 data = await cur.fetchall()
-                db_logger.info(data)
+                db_logger.info("Subindustry data successfully fetched from database")
             return data
         except DatabaseError as query_error:
             db_logger.error({
@@ -129,12 +129,68 @@ async def occupations(pool: AsyncConnectionPool, occupation_id: int | None = Non
                     """
                     await cur.execute(query)
                 data = await cur.fetchall()
-                db_logger.info(data)
+                db_logger.info("Occupation data successfully fetched from database")
             return data
         except DatabaseError as query_error:
             db_logger.error({
                 "error": str(query_error),
-                "context": "query_execution",
+                "context": "query execution",
                 "query": query
             })
             raise
+
+# function to return the location data from the db
+async def locations(pool: AsyncConnectionPool, location_id: int | None = None):
+    """
+    returns the locations from the db
+    """
+    async with get_connection(pool) as conn:
+        try:
+            async with conn.cursor(row_factory=dict_row) as cur:
+                if location_id is not None:
+                    query = """
+                    SELECT * FROM locations WHERE id = (%s)
+                    """
+                    await cur.execute(query, (location_id,))
+                else:
+                    query = """
+                    SELECT * FROM locations
+                    """
+                    await cur.execute(query)
+                data = await cur.fetchall()
+                db_logger.info("Location data successfully fetched from database")
+            return data
+        except DatabaseError as query_error:
+            db_logger.error({
+                "error": str(query_error),
+                "context": "query execution",
+                "query": query
+            })
+
+# function to return the employer data from the db
+async def employers(pool: AsyncConnectionPool, employer_id: int | None = None):
+    """
+    returns the employers from the db
+    """
+    async with get_connection(pool) as conn:
+        try:
+            async with conn.cursor(row_factory=dict_row) as cur:
+                if employer_id is not None:
+                    query = """
+                    SELECT * FROM employers WHERE id = (%s)
+                    """
+                    await cur.execute(query, (employer_id,))
+                else:
+                    query = """
+                    SELECT * FROM employers
+                    """
+                    await cur.execute(query)
+                data = await cur.fetchall()
+                db_logger.info("Employer data successfully fetched from database")
+            return data
+        except DatabaseError as query_error:
+            db_logger.error({
+                "error": str(query_error),
+                "context": "query execution",
+                "query": query
+            })

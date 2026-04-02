@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Depends, Request
+from fastapi import FastAPI, HTTPException, Depends, Request, Query
 from contextlib import asynccontextmanager
 from src.helper_modules.logger_setup import get_logger
 from src.db import db
@@ -52,7 +52,7 @@ async def async_test(conn_pool: ConnPool):
 # industry route
 @app.get("/industries")
 # fast api recognizes function parameters as query parameters
-async def industries(conn_pool: ConnPool, industry_id: int | None = None):
+async def industries(conn_pool: ConnPool, industry_id: Annotated[int | None, Query(alias="industry-id")] = None):
      try:
           if industry_id is not None:
                return await rl.industry(conn_pool, industry_id)
@@ -67,10 +67,9 @@ async def industries(conn_pool: ConnPool, industry_id: int | None = None):
           api_logger.exception("Unexpected error")
           raise HTTPException(status_code=500, detail="Internal server error")
 
-     
 # subindustry route
 @app.get("/subindustries")
-async def subindustries(conn_pool: ConnPool, subindustry_id: int | None = None):
+async def subindustries(conn_pool: ConnPool, subindustry_id: Annotated[int | None, Query(alias="subindustry-id")] = None):
      try:
           if subindustry_id is not None:
                return await rl.subindustry(conn_pool, subindustry_id)
@@ -87,7 +86,7 @@ async def subindustries(conn_pool: ConnPool, subindustry_id: int | None = None):
 
 # occupations route
 @app.get("/occupations")
-async def occupations(conn_pool: ConnPool, occupation_id: int | None = None):
+async def occupations(conn_pool: ConnPool, occupation_id: Annotated[int | None, Query(alias="occupation-id")] = None):
      try:
           if occupation_id is not None:
                return await rl.occupations(conn_pool, occupation_id)
@@ -101,13 +100,45 @@ async def occupations(conn_pool: ConnPool, occupation_id: int | None = None):
      except Exception as e:
           api_logger.exception("Unexpected error")
           raise HTTPException(status_code=500, detail="Internal server error")
+     
+# locations route
+@app.get("/locations")
+async def locations(conn_pool: ConnPool, location_id: Annotated[int | None, Query(alias="location-id")] = None):
+     try:
+          if location_id is not None:
+               return await rl.locations(conn_pool, location_id)
+          return await rl.locations(conn_pool)
+     except HTTPException as e:
+          api_logger.info(e)
+          raise
+     except DatabaseError as e:
+          api_logger.error(e)
+          raise HTTPException(status_code=500, detail="Database error")
+     except Exception as e:
+          api_logger.exception("Unexpected error")
+          raise HTTPException(status_code=500, detail="Internal server error")
 
-
+# employers
+@app.get("/employers")
+async def employers(conn_pool: ConnPool, employer_id: Annotated[int | None, Query(alias="employer-id")] = None):
+     try:
+          if employer_id is not None:
+               return await rl.employers(conn_pool, employer_id)
+          return await rl.employers(conn_pool)
+     except HTTPException as e:
+          api_logger.info(e)
+          raise
+     except DatabaseError as e:
+          api_logger.error(e)
+          raise HTTPException(status_code=500, detail="Database error")
+     except Exception as e:
+          api_logger.exception("Unexpected error")
+          raise HTTPException(status_code=500, detail="Internal server error")
+     
+     
 # TODO: create enpoints for:
 ## jobs - all data 
-## employers
-## locations
-## post/ delete new entries
+
 
 
 if __name__ == "__main__":

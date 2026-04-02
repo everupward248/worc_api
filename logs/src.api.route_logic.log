@@ -1,0 +1,9 @@
+2026-04-02 08:26:54,423 - src.api.route_logic - INFO - connection acquired - 19
+2026-04-02 08:26:54,430 - src.api.route_logic - INFO - Data successfully fetched from database - 189
+2026-04-02 08:26:54,430 - src.api.route_logic - INFO - connection released - 24
+2026-04-02 08:27:27,486 - src.api.route_logic - INFO - connection acquired - 19
+2026-04-02 08:27:27,488 - src.api.route_logic - INFO - Data successfully fetched from database - 189
+2026-04-02 08:27:27,488 - src.api.route_logic - INFO - connection released - 24
+2026-04-02 08:27:32,602 - src.api.route_logic - INFO - connection acquired - 19
+2026-04-02 08:27:32,605 - src.api.route_logic - INFO - Data successfully fetched from database - 189
+2026-04-02 08:27:32,605 - src.api.route_logic - INFO - connection released - 24
