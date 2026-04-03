@@ -134,10 +134,32 @@ async def employers(conn_pool: ConnPool, employer_id: Annotated[int | None, Quer
      except Exception as e:
           api_logger.exception("Unexpected error")
           raise HTTPException(status_code=500, detail="Internal server error")
-     
+
+# jobs
+@app.get("/jobs")
+async def jobs(conn_pool: ConnPool, employer: Annotated[int | str | None, Query(alias="employer")] = None, industry: Annotated[int | str | None, Query(alias="industry")] = None):
+     try:
+          if employer is not None:
+               return await rl.jobs(conn_pool, employer)
+          elif industry is not None:
+               pass 
+          else:
+               return await rl.jobs(conn_pool)
+     except HTTPException as e:
+          api_logger.info(e)
+          raise
+     except DatabaseError as e:
+          api_logger.error(e)
+          raise HTTPException(status_code=500, detail="Database error")
+     except Exception as e:
+          api_logger.exception("Unexpected error")
+          raise HTTPException(status_code=500, detail="Internal server error")
+
+
      
 # TODO: create enpoints for:
 ## jobs - all data 
+## add limit query parameter
 
 
 

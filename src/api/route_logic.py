@@ -194,3 +194,48 @@ async def employers(pool: AsyncConnectionPool, employer_id: int | None = None):
                 "context": "query execution",
                 "query": query
             })
+
+# function to return the job data from the db using views and stored procedures
+async def jobs(pool: AsyncConnectionPool, employer: int | str | None = None, industry: int | str |  None = None):
+    """
+    returns the job data from the jobs view in the db, 
+    stored procedure for filtering based on query paramets
+    """
+
+    async with get_connection(pool) as conn:
+        try:
+            async with conn.cursor(row_factory=dict_row) as cur:
+                if employer is not None:
+                    if str(employer).isdigit():
+                        query = """
+                        SELECT * FROM jobsView
+                        WHERE employer_id = (%s)
+                        """ 
+                        await cur.execute(query, (employer, ))
+                    else:
+                        # ILIKE is psql specific making the string case insensitive
+                        # pass the ILIKE condition as an argument in the execute method instead of in the query string directly 
+                        # or will trigger an error, as it will be interpreted as the ILIKE condition
+                        query = """
+                        SELECT * FROM jobsView 
+                        WHERE firm ILIKE (%s)
+                        """
+                        await cur.execute(query, (f"%{employer}%", ))
+                elif industry is not None:
+                    pass
+                else:
+                    query = """
+                    SELECT * FROM jobsView
+                    """
+                    await cur.execute(query)
+                data = await cur.fetchall()
+                db_logger.info("Job data successfully fetched from database")
+            return data
+        except DatabaseError as query_error:
+            db_logger.error({
+                "error": str(query_error),
+                "context": "query execution",
+                "query": query
+            })
+
+    
