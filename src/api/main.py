@@ -44,6 +44,7 @@ async def test_path():
 @app.get("/test")
 async def async_test(conn_pool: ConnPool):
      try:
+          api_logger.info("test route has been called")
           return await rl.test_logic(conn_pool)
      except HTTPException as e:
           api_logger.error(e)
@@ -55,7 +56,9 @@ async def async_test(conn_pool: ConnPool):
 async def industries(conn_pool: ConnPool, industry_id: Annotated[int | None, Query(alias="industry-id")] = None):
      try:
           if industry_id is not None:
+               api_logger.info(f"Industry route has been called for industry_id:{industry_id}")
                return await rl.industry(conn_pool, industry_id)
+          api_logger.info("Industry route has been called")
           return await rl.industry(conn_pool)
      except HTTPException as e:
           api_logger.info(e)
@@ -72,7 +75,9 @@ async def industries(conn_pool: ConnPool, industry_id: Annotated[int | None, Que
 async def subindustries(conn_pool: ConnPool, subindustry_id: Annotated[int | None, Query(alias="subindustry-id")] = None):
      try:
           if subindustry_id is not None:
+               api_logger.info(f"Subindustry route has been called for subindustry_id:{subindustry_id}")
                return await rl.subindustry(conn_pool, subindustry_id)
+          api_logger.info("Subindustry route has been called")
           return await rl.subindustry(conn_pool)
      except HTTPException as e:
           api_logger.info(e)
@@ -89,7 +94,9 @@ async def subindustries(conn_pool: ConnPool, subindustry_id: Annotated[int | Non
 async def occupations(conn_pool: ConnPool, occupation_id: Annotated[int | None, Query(alias="occupation-id")] = None):
      try:
           if occupation_id is not None:
+               api_logger.info(f"Occupations route has been called for industry_id:{occupation_id}")
                return await rl.occupations(conn_pool, occupation_id)
+          api_logger.info("Occupations route has been called")
           return await rl.occupations(conn_pool)
      except HTTPException as e:
           api_logger.info(e)
@@ -106,7 +113,9 @@ async def occupations(conn_pool: ConnPool, occupation_id: Annotated[int | None, 
 async def locations(conn_pool: ConnPool, location_id: Annotated[int | None, Query(alias="location-id")] = None):
      try:
           if location_id is not None:
+               api_logger.info(f"Locations route has been called for location_id:{location_id}")
                return await rl.locations(conn_pool, location_id)
+          api_logger.info("Locations route has been called")
           return await rl.locations(conn_pool)
      except HTTPException as e:
           api_logger.info(e)
@@ -123,7 +132,9 @@ async def locations(conn_pool: ConnPool, location_id: Annotated[int | None, Quer
 async def employers(conn_pool: ConnPool, employer_id: Annotated[int | None, Query(alias="employer-id")] = None):
      try:
           if employer_id is not None:
+               api_logger.info(f"Employers route has been called for employer_id:{employer_id}")
                return await rl.employers(conn_pool, employer_id)
+          api_logger.info("Employers route has been called")
           return await rl.employers(conn_pool)
      except HTTPException as e:
           api_logger.info(e)
@@ -138,12 +149,21 @@ async def employers(conn_pool: ConnPool, employer_id: Annotated[int | None, Quer
 # jobs
 @app.get("/jobs")
 async def jobs(conn_pool: ConnPool, employer: Annotated[int | str | None, Query(alias="employer")] = None, industry: Annotated[int | str | None, Query(alias="industry")] = None):
+     """
+     returns the jobs data from the db using the jobsView 
+     query parameters can be provided as id integers or as strings
+     """
      try:
+          # must pass the argument as a keyword otherwise it will be interpreted positionally 
+          # e.g. ?industry=n is interpreted as employer=n 
           if employer is not None:
-               return await rl.jobs(conn_pool, employer)
+               api_logger.info(f"Jobs route has been called with employer query parameter: {employer}")
+               return await rl.jobs(conn_pool, employer=employer)
           elif industry is not None:
-               pass 
+               api_logger.info(f"Jobs route has been called with industry query parameter: {industry}")
+               return await rl.jobs(conn_pool, industry=industry) 
           else:
+               api_logger.info(f"Jobs route has been called")
                return await rl.jobs(conn_pool)
      except HTTPException as e:
           api_logger.info(e)
@@ -154,13 +174,6 @@ async def jobs(conn_pool: ConnPool, employer: Annotated[int | str | None, Query(
      except Exception as e:
           api_logger.exception("Unexpected error")
           raise HTTPException(status_code=500, detail="Internal server error")
-
-
-     
-# TODO: create enpoints for:
-## jobs - all data 
-## add limit query parameter
-
 
 
 if __name__ == "__main__":

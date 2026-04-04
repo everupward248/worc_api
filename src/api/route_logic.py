@@ -65,13 +65,14 @@ async def industry(pool: AsyncConnectionPool, industry_id: int | None = None):
                     SELECT * FROM industries WHERE id = (%s)
                     """
                     await cur.execute(query, (industry_id,))
+                    db_logger.info(f"Industry data for id:{industry_id} successfully fetched from database")
                 else:    
                     query = """
                     SELECT * FROM industries
                     """
                     await cur.execute(query)
+                    db_logger.info("Industry data successfully fetched from database")
                 data = await cur.fetchall()
-                db_logger.info("Industry data successfully fetched from database")
             return data
         except DatabaseError as query_error:
             db_logger.error({
@@ -94,13 +95,14 @@ async def subindustry(pool: AsyncConnectionPool, subindustry_id: int | None = No
                     SELECT * FROM subindustries WHERE id = (%s)
                     """
                     await cur.execute(query, (subindustry_id,))
+                    db_logger.info(f"Subindustry data for id:{subindustry_id} successfully fetched from database")
                 else:
                     query = """
                     SELECT * FROM subindustries
                     """
                     await cur.execute(query)
+                    db_logger.info("Subindustry data successfully fetched from database")
                 data = await cur.fetchall()
-                db_logger.info("Subindustry data successfully fetched from database")
             return data
         except DatabaseError as query_error:
             db_logger.error({
@@ -123,13 +125,14 @@ async def occupations(pool: AsyncConnectionPool, occupation_id: int | None = Non
                     SELECT * FROM occupations WHERE id = (%s)
                     """
                     await cur.execute(query, (occupation_id,))
+                    db_logger.info(f"Occupation data for id:{occupation_id} successfully fetched from database")
                 else:
                     query = """
                     SELECT * FROM occupations
                     """
                     await cur.execute(query)
+                    db_logger.info("Occupation data successfully fetched from database")
                 data = await cur.fetchall()
-                db_logger.info("Occupation data successfully fetched from database")
             return data
         except DatabaseError as query_error:
             db_logger.error({
@@ -152,13 +155,14 @@ async def locations(pool: AsyncConnectionPool, location_id: int | None = None):
                     SELECT * FROM locations WHERE id = (%s)
                     """
                     await cur.execute(query, (location_id,))
+                    db_logger.info(f"Location data for id:{location_id} successfully fetched from database")
                 else:
                     query = """
                     SELECT * FROM locations
                     """
                     await cur.execute(query)
+                    db_logger.info("Location data successfully fetched from database")
                 data = await cur.fetchall()
-                db_logger.info("Location data successfully fetched from database")
             return data
         except DatabaseError as query_error:
             db_logger.error({
@@ -180,13 +184,14 @@ async def employers(pool: AsyncConnectionPool, employer_id: int | None = None):
                     SELECT * FROM employers WHERE id = (%s)
                     """
                     await cur.execute(query, (employer_id,))
+                    db_logger.info(f"Employer data for id:{employer_id} successfully fetched from database")
                 else:
                     query = """
                     SELECT * FROM employers
                     """
                     await cur.execute(query)
+                    db_logger.info("Employer data successfully fetched from database")
                 data = await cur.fetchall()
-                db_logger.info("Employer data successfully fetched from database")
             return data
         except DatabaseError as query_error:
             db_logger.error({
@@ -195,11 +200,11 @@ async def employers(pool: AsyncConnectionPool, employer_id: int | None = None):
                 "query": query
             })
 
-# function to return the job data from the db using views and stored procedures
+# function to return the job data from the db using views
 async def jobs(pool: AsyncConnectionPool, employer: int | str | None = None, industry: int | str |  None = None):
     """
     returns the job data from the jobs view in the db, 
-    stored procedure for filtering based on query paramets
+    the query parameter can be either the id or a string using ILIKE
     """
 
     async with get_connection(pool) as conn:
@@ -212,6 +217,7 @@ async def jobs(pool: AsyncConnectionPool, employer: int | str | None = None, ind
                         WHERE employer_id = (%s)
                         """ 
                         await cur.execute(query, (employer, ))
+                        db_logger.info(f"Job data for {employer} successfully fetched from database")
                     else:
                         # ILIKE is psql specific making the string case insensitive
                         # pass the ILIKE condition as an argument in the execute method instead of in the query string directly 
@@ -221,15 +227,29 @@ async def jobs(pool: AsyncConnectionPool, employer: int | str | None = None, ind
                         WHERE firm ILIKE (%s)
                         """
                         await cur.execute(query, (f"%{employer}%", ))
+                        db_logger.info(f"Job data for {employer} successfully fetched from database")
                 elif industry is not None:
-                    pass
+                    if str(industry).isdigit():
+                        query = """
+                        SELECT * FROM jobsView
+                        WHERE industry_id = (%s)
+                        """
+                        await cur.execute(query, (industry, ))
+                        db_logger.info(f"Job data for {industry} successfully fetched from database")
+                    else:
+                        query = """
+                        SELECT * FROM jobsView
+                        WHERE industry ILIKE (%s)
+                        """
+                        await cur.execute(query, (f"%{industry}%", ))
+                        db_logger.info(f"Job data for {industry} successfully fetched from database")
                 else:
                     query = """
                     SELECT * FROM jobsView
                     """
                     await cur.execute(query)
+                    db_logger.info("Job data successfully fetched from database")
                 data = await cur.fetchall()
-                db_logger.info("Job data successfully fetched from database")
             return data
         except DatabaseError as query_error:
             db_logger.error({
