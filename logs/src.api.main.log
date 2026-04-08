@@ -1,11 +1,1 @@
-2026-04-07 06:44:06,752 - src.api.main - INFO - test route has been called - 47
-2026-04-07 06:44:23,046 - src.api.main - INFO - Industry route has been called - 61
-2026-04-07 06:44:46,969 - src.api.main - INFO - Industry route has been called - 61
-2026-04-07 06:44:54,263 - src.api.main - INFO - Industry route has been called for industry_id:11 - 59
-2026-04-07 06:49:56,838 - src.api.main - INFO - Industry route has been called - 61
-2026-04-07 06:50:02,330 - src.api.main - INFO - Jobs route has been called with industry query parameter: 7 - 163
-2026-04-07 06:50:17,404 - src.api.main - INFO - Jobs route has been called with industry query parameter: insurance - 163
-2026-04-07 06:50:48,223 - src.api.main - INFO - Jobs route has been called with employer query parameter: 659 - 160
-2026-04-07 06:50:57,360 - src.api.main - INFO - Jobs route has been called with employer query parameter: HARMONIC - 160
-2026-04-07 06:58:54,957 - src.api.main - INFO - test route has been called - 47
-2026-04-07 06:59:02,319 - src.api.main - INFO - Jobs route has been called - 166
+2026-04-08 08:16:59,549 - src.api.main - INFO - Jobs route has been called - 166
