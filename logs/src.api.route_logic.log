@@ -1,0 +1,57 @@
+2026-04-09 07:43:33,999 - src.api.route_logic - INFO - connection acquired - 19
+2026-04-09 07:43:34,011 - src.api.route_logic - INFO - Test data successfully fetched from database - 45
+2026-04-09 07:43:34,011 - src.api.route_logic - INFO - connection released - 24
+2026-04-09 07:45:08,844 - src.api.route_logic - INFO - connection acquired - 19
+2026-04-09 07:45:08,898 - src.api.route_logic - INFO - Job data successfully fetched from database - 251
+2026-04-09 07:45:08,935 - src.api.route_logic - INFO - connection released - 24
+2026-04-09 07:46:35,550 - src.api.route_logic - INFO - connection acquired - 19
+2026-04-09 07:46:35,598 - src.api.route_logic - INFO - Job data successfully fetched from database - 251
+2026-04-09 07:46:35,634 - src.api.route_logic - INFO - connection released - 24
+2026-04-09 07:47:01,228 - src.api.route_logic - INFO - connection acquired - 19
+2026-04-09 07:47:01,276 - src.api.route_logic - INFO - Job data successfully fetched from database - 251
+2026-04-09 07:47:01,311 - src.api.route_logic - INFO - connection released - 24
+2026-04-09 07:47:09,786 - src.api.route_logic - INFO - connection acquired - 19
+2026-04-09 07:47:09,833 - src.api.route_logic - INFO - Job data successfully fetched from database - 251
+2026-04-09 07:47:09,868 - src.api.route_logic - INFO - connection released - 24
+2026-04-09 07:53:24,241 - src.api.route_logic - INFO - connection acquired - 19
+2026-04-09 07:53:24,287 - src.api.route_logic - INFO - Job data successfully fetched from database - 251
+2026-04-09 07:53:24,321 - src.api.route_logic - INFO - connection released - 24
+2026-04-09 07:53:34,006 - src.api.route_logic - INFO - connection acquired - 19
+2026-04-09 07:53:34,047 - src.api.route_logic - INFO - Job data successfully fetched from database - 251
+2026-04-09 07:53:34,097 - src.api.route_logic - INFO - connection released - 24
+2026-04-09 07:53:52,831 - src.api.route_logic - INFO - connection acquired - 19
+2026-04-09 07:53:52,873 - src.api.route_logic - INFO - Job data successfully fetched from database - 251
+2026-04-09 07:53:52,907 - src.api.route_logic - INFO - connection released - 24
+2026-04-09 07:54:01,709 - src.api.route_logic - INFO - connection acquired - 19
+2026-04-09 07:54:01,751 - src.api.route_logic - INFO - Job data successfully fetched from database - 251
+2026-04-09 07:54:01,785 - src.api.route_logic - INFO - connection released - 24
+2026-04-09 07:55:35,080 - src.api.route_logic - INFO - connection acquired - 19
+2026-04-09 07:55:35,130 - src.api.route_logic - INFO - Job data successfully fetched from database - 251
+2026-04-09 07:55:35,164 - src.api.route_logic - INFO - connection released - 24
+2026-04-09 07:55:53,931 - src.api.route_logic - INFO - connection acquired - 19
+2026-04-09 07:55:53,973 - src.api.route_logic - INFO - Job data successfully fetched from database - 251
+2026-04-09 07:55:54,007 - src.api.route_logic - INFO - connection released - 24
+2026-04-09 07:56:54,138 - src.api.route_logic - INFO - connection acquired - 19
+2026-04-09 07:56:54,181 - src.api.route_logic - INFO - Job data successfully fetched from database - 251
+2026-04-09 07:56:54,213 - src.api.route_logic - INFO - connection released - 24
+2026-04-09 08:02:00,045 - src.api.route_logic - INFO - connection acquired - 19
+2026-04-09 08:02:00,086 - src.api.route_logic - INFO - Job data successfully fetched from database - 251
+2026-04-09 08:02:00,119 - src.api.route_logic - INFO - connection released - 24
+2026-04-09 08:02:16,273 - src.api.route_logic - INFO - connection acquired - 19
+2026-04-09 08:02:16,313 - src.api.route_logic - INFO - Job data successfully fetched from database - 251
+2026-04-09 08:02:16,346 - src.api.route_logic - INFO - connection released - 24
+2026-04-09 08:02:38,636 - src.api.route_logic - INFO - connection acquired - 19
+2026-04-09 08:02:38,679 - src.api.route_logic - INFO - Job data successfully fetched from database - 251
+2026-04-09 08:02:38,711 - src.api.route_logic - INFO - connection released - 24
+2026-04-09 08:03:30,109 - src.api.route_logic - INFO - connection acquired - 19
+2026-04-09 08:03:30,152 - src.api.route_logic - INFO - Job data successfully fetched from database - 251
+2026-04-09 08:03:30,184 - src.api.route_logic - INFO - connection released - 24
+2026-04-09 08:13:51,948 - src.api.route_logic - INFO - connection acquired - 19
+2026-04-09 08:13:51,989 - src.api.route_logic - INFO - Job data successfully fetched from database - 251
+2026-04-09 08:13:52,021 - src.api.route_logic - INFO - connection released - 24
+2026-04-09 08:15:01,015 - src.api.route_logic - INFO - connection acquired - 19
+2026-04-09 08:15:01,057 - src.api.route_logic - INFO - Job data successfully fetched from database - 251
+2026-04-09 08:15:01,089 - src.api.route_logic - INFO - connection released - 24
+2026-04-09 08:20:07,099 - src.api.route_logic - INFO - connection acquired - 19
+2026-04-09 08:20:07,109 - src.api.route_logic - INFO - Job data for 659 successfully fetched from database - 220
+2026-04-09 08:20:07,110 - src.api.route_logic - INFO - connection released - 24
