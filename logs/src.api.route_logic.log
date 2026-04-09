@@ -1,3 +1,0 @@
-2026-04-08 08:16:59,549 - src.api.route_logic - INFO - connection acquired - 19
-2026-04-08 08:16:59,635 - src.api.route_logic - INFO - Job data successfully fetched from database - 251
-2026-04-08 08:16:59,673 - src.api.route_logic - INFO - connection released - 24
