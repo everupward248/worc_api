@@ -361,3 +361,8 @@ UPDATE staging_table
 SET required_education_level = (SELECT education_level FROM education WHERE id = 4)
 WHERE required_education_level LIKE 'Mast%';
 
+-- update the name for professional activities to correct spelling error
+UPDATE industries
+SET industry = 'Professional, Scientific and Technical Activities'
+WHERE id = 16;
+
