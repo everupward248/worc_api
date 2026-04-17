@@ -1,0 +1,45 @@
+[build-system]
+requires = ["setuptools>= 77.0.3"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[project]
+name = "worc_api_project"
+version = "0.0.1"
+authors = [
+    {name="czar_of_ttar248", email="everupward248@gmail.com"}
+]
+
+dependencies = [
+    "fastapi",
+    "uvicorn[standard]",
+    "psycopg[binary]",
+    "pydantic",
+    "python-dotenv"
+]
+
+description = "This is a project which takes data of Q1-3 2025 job listing data provided by WORC for the Cayman Islands and creates a REST API to access it from a postgresql database."
+readme = "README.md"
+requires-python = ">=3.11"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+license = "MIT"
+license-files = ["LICEN[CS]E*"]
+
+[project.urls]
+Homepage = "https://github.com/everupward248/worc_api"
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-asyncio",
+    "httpx"
+]
+
+
