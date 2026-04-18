@@ -1,12 +1,13 @@
 from fastapi import FastAPI, HTTPException, Depends, Request, Query
 from contextlib import asynccontextmanager
-from src.helper_modules.logger_setup import get_logger
-from src.db import db
+from app.helper_modules.logger_setup import get_logger
+from app.db import db
 from dotenv import load_dotenv
-import src.api.route_logic as rl
+import app.api.route_logic as rl
 from psycopg_pool import AsyncConnectionPool
 from typing import Annotated
 from psycopg import DatabaseError
+import uvicorn
 
 # load environment variables from .env file, this loads globally so accessible across all modules, hence no error in the db factory function
 # configuration should be initialized at entry point, not inside libraries/modules
@@ -174,7 +175,6 @@ async def jobs(conn_pool: ConnPool, employer: Annotated[int | str | None, Query(
      except Exception as e:
           api_logger.exception("Unexpected error")
           raise HTTPException(status_code=500, detail="Internal server error")
-
 
 if __name__ == "__main__":
      print(api_logger)

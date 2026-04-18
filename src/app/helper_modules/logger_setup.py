@@ -3,7 +3,7 @@ import logging
 
 # resolve issue with the file path as fastapi is throwing an error 
 # this makes the file path absolute to the project dir
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent
 log_dir = BASE_DIR / "logs"
 log_dir.mkdir(exist_ok=True)
 

@@ -13,7 +13,6 @@ version = "0.0.1"
 authors = [
     {name="czar_of_ttar248", email="everupward248@gmail.com"}
 ]
-
 dependencies = [
     "fastapi",
     "uvicorn[standard]",
@@ -21,7 +20,6 @@ dependencies = [
     "pydantic",
     "python-dotenv"
 ]
-
 description = "This is a project which takes data of Q1-3 2025 job listing data provided by WORC for the Cayman Islands and creates a REST API to access it from a postgresql database."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -41,5 +39,4 @@ dev = [
     "pytest-asyncio",
     "httpx"
 ]
-
 

@@ -1,8 +1,0 @@
-2026-04-17 07:46:06,561 - src.api.main - INFO - test route has been called - 47
-2026-04-17 07:46:12,943 - src.api.main - INFO - Jobs route has been called - 166
-2026-04-17 07:46:33,794 - src.api.main - INFO - Jobs route has been called with employer query parameter: 659 - 160
-2026-04-17 07:46:55,475 - src.api.main - INFO - Jobs route has been called with industry query parameter: insurance - 163
-2026-04-17 07:46:58,984 - src.api.main - INFO - Jobs route has been called - 166
-2026-04-17 07:47:06,304 - src.api.main - INFO - Jobs route has been called - 166
-2026-04-17 07:47:14,211 - src.api.main - INFO - Jobs route has been called - 166
-2026-04-17 07:47:20,184 - src.api.main - INFO - Jobs route has been called - 166

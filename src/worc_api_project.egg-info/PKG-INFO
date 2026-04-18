@@ -1,0 +1,22 @@
+Metadata-Version: 2.4
+Name: worc_api_project
+Version: 0.0.1
+Summary: This is a project which takes data of Q1-3 2025 job listing data provided by WORC for the Cayman Islands and creates a REST API to access it from a postgresql database.
+Author-email: czar_of_ttar248 <everupward248@gmail.com>
+License-Expression: MIT
+Project-URL: Homepage, https://github.com/everupward248/worc_api
+Classifier: Programming Language :: Python :: 3
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.11
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: fastapi
+Requires-Dist: uvicorn[standard]
+Requires-Dist: psycopg[binary]
+Requires-Dist: pydantic
+Requires-Dist: python-dotenv
+Provides-Extra: dev
+Requires-Dist: pytest; extra == "dev"
+Requires-Dist: pytest-asyncio; extra == "dev"
+Requires-Dist: httpx; extra == "dev"
+Dynamic: license-file

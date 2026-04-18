@@ -1,0 +1,2 @@
+[console_scripts]
+worc-api = app.api.main:main
