@@ -2,7 +2,7 @@ from psycopg import DatabaseError
 from contextlib import asynccontextmanager
 from psycopg_pool import AsyncConnectionPool
 from psycopg.rows import dict_row
-from src.helper_modules.logger_setup import get_logger
+from app.helper_modules.logger_setup import get_logger
 
 
 # initialize the logger
