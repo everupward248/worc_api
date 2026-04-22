@@ -80,7 +80,7 @@ INNER JOIN years_experience AS ye
 </details>
 
 ## Potential Improvements
-Currently the `industries` and `subindustries` tables have no relations. Althought 3NF is currently satisfied, there is a risk where a subindustry might not logically belong to an industry. A junction table could be added to the database which would map the relations between these tables. This would add the benefit of allowing a single subindustry to be mapped to multiple industries. 
+Currently the `industries` and `subindustries` tables have no relations. Although 3NF is currently satisfied, there is a risk where a subindustry might not logically belong to an industry. A junction table could be added to the database which would map the relations between these tables. This would add the benefit of allowing a single subindustry to be mapped to multiple industries. 
 
 ## Conclusion
 This database provides a 3NF compliant foundation for the WORC job listings to be served via a REST API. By decoupling the API logic and the database schema via `jobsView` and optimizing queries with targeted indices, the database ensures data integrity and high performance. 
