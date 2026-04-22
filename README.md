@@ -24,6 +24,7 @@ This project takes a dataset of Q1-3 2025 job listings, provided by Workforce Op
 - [Database and SQL Layer](#database-and-sql-layer)
 - [REST API](#rest-api)
 - [Data Analysis](#data-analysis)
+- [Conclusion](#conclusion)
 
 ### Database and SQL Layer
 The WORC dataset is ingested into a local PostgreSQL database, with minor data cleansing performed in python in the helper_modules/clean_data.py module; although, majority of data cleansing performed directly in SQL. Ingestion is handled using transactions and is only committed once integrity checks are passed using procedural statements. The original dataset, which was provided as one table, has been normalized into separate tables to reduce redundancy. A view containing the job data was created to be accessed by the API '/jobs' route. Indices were added to optimize performance, with emphasis on query parameters for the API routes. Exploratory data analysis was also performed at the SQL layer using common table expressions and window functions. All sql is accessible in the 'queries/' subdirectory and database documentation in the DESIGN.md file.
