@@ -48,6 +48,6 @@ API connections are handled using a connection pool to allow more conncurrent co
 
 Data analyis is performed again at the python layer to demonstrate how an end user might user the API. The end user could examine the dataset further and examine things such as the highest paying industries, distribution of salaries, the effect education level has on salary, etc.. Data privacy has also been enforced by hashing all sensitive data. 
 
-Separation of conerns, testing, logging, documentation, and the directory structure have been emphasised to adhere to a robust framework for scalability, reprodocability, and maintability. 
+Separation of conerns, testing, logging, documentation, and the directory structure have been emphasised to adhere to a robust framework for scalability, reproducibility, and maintability. 
 
 Thank you for visiting my project and if you have any feedback please leave a comment on the project's youtube video here: insert link once posted. 
