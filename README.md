@@ -18,6 +18,7 @@ This project takes a dataset of Q1-3 2025 job listings, provided by Workforce Op
 - Other
     - pytest
     - logging
+    - hashlib
 
 
 ### Table of Contents
