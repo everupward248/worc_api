@@ -51,4 +51,4 @@ Data analyis is performed again at the python layer to demonstrate how an end us
 
 Separation of conerns, testing, logging, documentation, and the directory structure have been emphasised to adhere to a robust framework for scalability, reproducibility, and maintability. 
 
-Thank you for visiting my project and if you have any feedback please leave a comment on the project's youtube video here: insert link once posted. 
+Thank you for visiting my project and if you have any feedback please leave a comment on the project's youtube video here: https://www.youtube.com/watch?v=6KQCNJfxvlg. 
